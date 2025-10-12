@@ -1,15 +1,25 @@
 # NVIDIA-GPU-Operator
 
-### 1-1. IOMMUグループの確認
+# 1. GPUのPass Through設定
+### 1-1. デバイスIDの確認
 ```
-for d in /sys/kernel/iommu_groups/*/devices/*; do n=${d#*/iommu_groups/*}; n=${n%/*}; printf 'IOMMU Group %s: %s\n' "$n" "$(basename $d)"; done | grep '01:00'
+$ lspci |grep NVIDIA
+01:00.0 VGA compatible controller: NVIDIA Corporation GP107GL [Quadro P1000] (rev a1)
+01:00.1 Audio device: NVIDIA Corporation GP107GL High Definition Audio Controller (rev a1)
+```
+```
+$ lspci -nnk -s 01:00.0 |grep Subsystem
+	Subsystem: NVIDIA Corporation GP107GL [Quadro P1000] [10de:11bc]
+$ lspci -nnk -s 01:00.1 |grep Subsystem
+	Subsystem: NVIDIA Corporation GP107GL High Definition Audio Controller [10de:11bc]
 ```
 ### 1-2. /etc/default/grubの編集
-/etc/default/grubを以下のように編集する。
+/etc/default/grubを以下のように編集し、Pass Throughを有効にする。
 ```
-GRUB_CMDLINE_LINUX_DEFAULT="quiet splash intel_iommu=on vfio_iommu_type1.allow_unsafe_interrupts=1 iommu=pt vfio-pci.ids=10de:1cb1,10de:0fb9"
+GRUB_CMDLINE_LINUX_DEFAULT="quiet splash intel_iommu=on vfio_iommu_type1.allow_unsafe_interrupts=1 iommu=pt"
 ```
-### 1-3. 10de:1cb1 (VGA) と 10de:0fb9 (Audio) のIDをvfio-pciに割り当てる。
+### 1-3. VGAとAudioのIDをvfio-pciに割り当てる。
+確認したデバイスIDをもとに、vfio-pciに割り当てる。
 ```
 echo "options vfio-pci ids=10de:1cb1,10de:0fb9" | sudo tee /etc/modprobe.d/vfio-pci.conf
 ```
