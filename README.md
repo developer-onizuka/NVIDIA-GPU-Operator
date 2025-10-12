@@ -14,12 +14,9 @@ $ lspci -nnk -s 01:00.1 |grep Subsystem
 	Subsystem: NVIDIA Corporation GP107GL High Definition Audio Controller [10de:11bc]
 ```
 ### 1-2. /etc/default/grubの編集
-/etc/default/grubを以下のように編集し、Pass Throughを有効にする。
+/etc/default/grubを以下のように編集し、Pass Throughを有効にする。編集後、sudo update-grubを実行する。
 ```
 GRUB_CMDLINE_LINUX_DEFAULT="quiet splash intel_iommu=on vfio_iommu_type1.allow_unsafe_interrupts=1 iommu=pt"
-```
-```
-sudo update-grub
 ```
 ### 1-3. VGAとAudioのIDをvfio-pciに割り当てる。
 確認したデバイスIDをもとに、vfio-pciに割り当てる。
