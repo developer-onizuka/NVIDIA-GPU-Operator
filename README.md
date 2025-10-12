@@ -18,6 +18,9 @@ $ lspci -nnk -s 01:00.1 |grep Subsystem
 ```
 GRUB_CMDLINE_LINUX_DEFAULT="quiet splash intel_iommu=on vfio_iommu_type1.allow_unsafe_interrupts=1 iommu=pt"
 ```
+```
+sudo update-grub
+```
 ### 1-3. VGAとAudioのIDをvfio-pciに割り当てる。
 確認したデバイスIDをもとに、vfio-pciに割り当てる。
 ```
