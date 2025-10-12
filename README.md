@@ -59,11 +59,17 @@ $ lspci -nnk -s 01:00.1
 	Kernel driver in use: vfio-pci
 	Kernel modules: snd_hda_intel
 ```
-# 2. Vagrantによる仮想マシンの起動
+# 2. VagrantによるKubernetesクラスタの起動
 ```
 git clone https://github.com/developer-onizuka/NVIDIA-GPU-Operator
 cd NVIDIA-GPU-Operator
 cd kubernetes
 vagrant up --provider=libvirt
 ```
-
+# 3. Vagrantによるnfsサーバーの起動
+```
+git clone https://github.com/developer-onizuka/NVIDIA-GPU-Operator
+cd NVIDIA-GPU-Operator
+cd nfs
+vagrant up --provider=libvirt
+```
