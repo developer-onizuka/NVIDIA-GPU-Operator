@@ -86,13 +86,20 @@ You can find the latest version of GPU Operator below:<br>
 - https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/release-notes.html
 ```
 VERSION="580.65.06"
-helm install --wait --generate-name nvidia/gpu-operator --set driver.version=$VERSION
+RELEASE_NAME="gpu-operator-v$(echo $VERSION | tr '.' '-')"
+helm install --wait $RELEASE_NAME nvidia/gpu-operator --set driver.version=$VERSION
 ```
 ### 5-1. Check if gpu-operator properly finished deploying DaemonSet
 ```
 kubectl get pods -o wide
 ```
-### 5-2. Uninstall GPU operator
+### 5-2. Update GPU operator (if needed)
+```
+NEW_VERSION="580.99.99"
+RELEASE_NAME="gpu-operator-v$(echo $VERSION | tr '.' '-')"
+helm upgrade --wait --install $RELEASE_NAME nvidia/gpu-operator --set driver.version=$NEW_VERSION
+```
+### 5-3. Uninstall GPU operator (if needed)
 ```
 helm delete $(helm ls -n default | awk '/gpu-operator/{print $1}') -n default
 ```
