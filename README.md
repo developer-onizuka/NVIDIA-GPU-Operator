@@ -73,3 +73,26 @@ cd NVIDIA-GPU-Operator
 cd nfs
 vagrant up --provider=libvirt
 ```
+# 4. Install Helm chart at Master node
+```
+curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 \
+&& chmod 700 get_helm.sh && ./get_helm.sh
+```
+```
+helm repo add nvidia https://nvidia.github.io/gpu-operator && helm repo update
+```
+# 5. Install GPU Operator at Master node
+You can find the latest version of GPU Operator below:<br>
+- https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/release-notes.html
+```
+VERSION="580.65.06"
+helm install --wait --generate-name nvidia/gpu-operator --set driver.version=$VERSION
+```
+### 5-1. Check if gpu-operator properly finished deploying DaemonSet
+```
+kubectl get pods -o wide
+```
+### 5-2. Uninstall GPU operator
+```
+helm delete $(helm ls -n default | awk '/gpu-operator/{print $1}') -n default
+```
