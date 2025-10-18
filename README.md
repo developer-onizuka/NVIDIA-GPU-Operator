@@ -66,6 +66,13 @@ cd NVIDIA-GPU-Operator
 cd kubernetes
 vagrant up --provider=libvirt
 ```
+状況に応じて、Vagrantfileを以下のように修正してください。
+```
+Vagrant.configure("2") do |config|
+  config.vm.box = "bento/ubuntu-24.04"
+  config.ssh.forward_x11 = true
+  config.vm.synced_folder ".", "/vagrant", type: "rsync"  <---この行を追加する。
+```
 # 3. Vagrantによるnfsサーバーの起動
 ```
 git clone https://github.com/developer-onizuka/NVIDIA-GPU-Operator
