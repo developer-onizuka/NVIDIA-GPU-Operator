@@ -92,7 +92,7 @@ helm repo add nvidia https://nvidia.github.io/gpu-operator && helm repo update
 You can find the latest version of GPU Operator below:<br>
 - https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/release-notes.html
 ```
-VERSION="580.65.06"
+VERSION="580.82.07"
 RELEASE_NAME="gpu-operator-v$(echo $VERSION | tr '.' '-')"
 helm install --wait $RELEASE_NAME nvidia/gpu-operator --set driver.version=$VERSION
 ```
