@@ -4,14 +4,14 @@
 ### 1-1. デバイスIDの確認
 ```
 $ lspci |grep NVIDIA
-01:00.0 VGA compatible controller: NVIDIA Corporation GP107GL [Quadro P1000] (rev a1)
-01:00.1 Audio device: NVIDIA Corporation GP107GL High Definition Audio Controller (rev a1)
+01:00.0 VGA compatible controller: NVIDIA Corporation GP104GL [Quadro P4000] (rev a1)
+01:00.1 Audio device: NVIDIA Corporation GP104 High Definition Audio Controller (rev a1)
 ```
 ```
-$ lspci -nnk -s 01:00.0 |grep Subsystem
-	Subsystem: NVIDIA Corporation GP107GL [Quadro P1000] [10de:11bc]
-$ lspci -nnk -s 01:00.1 |grep Subsystem
-	Subsystem: NVIDIA Corporation GP107GL High Definition Audio Controller [10de:11bc]
+$ lspci -nnk -s 01:00.0 |grep VGA
+01:00.0 VGA compatible controller [0300]: NVIDIA Corporation GP104GL [Quadro P4000] [10de:1bb1] (rev a1)
+$ lspci -nnk -s 01:00.1 |grep Audio
+01:00.1 Audio device [0403]: NVIDIA Corporation GP104 High Definition Audio Controller [10de:10f0] (rev a1)
 ```
 ### 1-2. /etc/default/grubの編集
 /etc/default/grubを以下のように編集し、Pass Throughを有効にする。編集後、sudo update-grubを実行する。
@@ -21,7 +21,7 @@ GRUB_CMDLINE_LINUX_DEFAULT="quiet splash intel_iommu=on vfio_iommu_type1.allow_u
 ### 1-3. VGAとAudioのIDをvfio-pciに割り当てる。
 確認したデバイスIDをもとに、vfio-pciに割り当てる。
 ```
-echo "options vfio-pci ids=10de:1cb1,10de:0fb9" | sudo tee /etc/modprobe.d/vfio-pci.conf
+echo "options vfio-pci ids=10de:1bb1,10de:10f0" | sudo tee /etc/modprobe.d/vfio-pci.conf
 ```
 ### 1-4. nouveauを完全にブロックする。
 ```
@@ -48,14 +48,13 @@ reboot
 vfio-pciがロードできているかを確認する。
 ```
 $ lspci -nnk -s 01:00.0
-01:00.0 VGA compatible controller [0300]: NVIDIA Corporation GP107GL [Quadro P1000] [10de:1cb1] (rev a1)
-	Subsystem: NVIDIA Corporation GP107GL [Quadro P1000] [10de:11bc]
+01:00.0 VGA compatible controller [0300]: NVIDIA Corporation GP104GL [Quadro P4000] [10de:1bb1] (rev a1)
+	Subsystem: NVIDIA Corporation GP104GL [Quadro P4000] [10de:11a3]
 	Kernel driver in use: vfio-pci
-	Kernel modules: nvidiafb, nouveau
-
+	Kernel modules: nvidiafb, nouveau, nvidia_drm, nvidia
 $ lspci -nnk -s 01:00.1
-01:00.1 Audio device [0403]: NVIDIA Corporation GP107GL High Definition Audio Controller [10de:0fb9] (rev a1)
-	Subsystem: NVIDIA Corporation GP107GL High Definition Audio Controller [10de:11bc]
+01:00.1 Audio device [0403]: NVIDIA Corporation GP104 High Definition Audio Controller [10de:10f0] (rev a1)
+	Subsystem: NVIDIA Corporation GP104 High Definition Audio Controller [10de:11a3]
 	Kernel driver in use: vfio-pci
 	Kernel modules: snd_hda_intel
 ```
