@@ -42,7 +42,7 @@ sudo update-initramfs -u
 ```
 ### 1-8. Reboot
 ```
-reboot
+sudo reboot
 ```
 ### 1-9. lspciによる確認
 vfio-pciがロードできているかを確認する。
